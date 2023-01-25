@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.SystemVerilog": "systemverilog",
+        "vector": "cpp",
+        "iostream": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "iterator": "cpp"
+    }
+}
