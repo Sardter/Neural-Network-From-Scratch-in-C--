@@ -59,6 +59,8 @@ vector<double> * scalar_product(vector<double> * a, double b);
 
 vector<double> *vector_addition(vector<double> * a, vector<double> * b);
 
+vector<double> *vector_subtraction(vector<double> * a, vector<double> * b);
+
 vector<double> *dot_product(vector<double> &a, vector<vector<double> > &b);
 
 ostream& operator << (ostream& stream, matrice m);

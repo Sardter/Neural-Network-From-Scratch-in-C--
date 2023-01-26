@@ -107,6 +107,17 @@ vector<double> *vector_addition(vector<double> * a, vector<double> * b)
     return a;
 }
 
+vector<double> *vector_subtraction(vector<double> * a, vector<double> * b)
+{
+    _check_size(*a, *b);
+
+    for (size_t i = 0; i < (*a).size(); i++)
+    {
+        (*a)[i] -= (*b)[i];
+    }
+    return a;
+}
+
 matrice * matrice::add(vector<double> * v) const
 {
     matrice * res = this->copy();
@@ -253,7 +264,7 @@ vector<double> * matrice::columns_sum() const
 {
     size_t col_size = this->column_size();
     size_t row_size = this->row_size();
-    vector<double> * res = new vector<double>(col_size, 0);
+    vector<double> * res = new vector<double>(row_size, 0);
 
     for (size_t i = 0; i < col_size; i++)
     {

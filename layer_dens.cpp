@@ -77,3 +77,11 @@ matrice * layer_dens::get_inputs() const {
 vector<double> * layer_dens::get_biases_derivatives() const {
     return new vector<double>(*this->biases_derivative);
 }
+
+void layer_dens::set_biases(vector<double> * v) {
+    this->biases = v;
+}
+
+void layer_dens::set_weights(matrice * m) {
+    this->weights = m;
+}

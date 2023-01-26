@@ -31,6 +31,9 @@ public:
     matrice * get_inputs_derivatives() const;
     matrice * get_inputs() const;
     vector<double> * get_biases_derivatives() const;
+
+    void set_weights(matrice * m);
+    void set_biases(vector<double> * v);
 };
 
 
