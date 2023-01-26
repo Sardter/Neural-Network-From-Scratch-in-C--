@@ -34,6 +34,26 @@ matrice * inputs2() {
     return new matrice(inputs);
 }
 
+matrice * weights() {
+    double w0[] = {0.2, 0.8, -0.5, 1.0};
+    vector<double> v0(begin(w0), end(w0));
+    double w1[] = {0.5, -0.91, 0.26, -0.5};
+    vector<double> v1(begin(w1), end(w1));
+    double w2[] = {-0.26, -0.27, 0.17, 0.87};
+    vector<double> v2(begin(w2), end(w2));
+
+    vector<double> weight[] = {v0, v1, v2};
+    vector<vector<double> > weights(begin(weight), end(weight));
+    return (new matrice(weights))->transpose();
+}
+
+vector<double> * biases() {
+    double bias[] = {2, 3, 0.5};
+    vector<double> biases(begin(bias), end(bias));
+
+    return new vector<double>(biases);
+}
+
 vector<int> * inputs2_target() {
     double i0[] = {0, 0, 1};
     return new vector<int>(begin(i0), end(i0));
@@ -41,27 +61,59 @@ vector<int> * inputs2_target() {
 
 int main() {
     matrice * inputs_matrice = inputs1();
+    matrice * weights_matice = weights();
+    vector<double> * bias = biases();
 
+    //layer_dens l1 = layer_dens(weights_matice, bias);
     layer_dens l1 = layer_dens(4, 5);
     l1.forward(inputs_matrice);
+    matrice * l1_out = l1.get_output();
     cout << "layer 1 out:" << endl;
-    cout << *l1.get_output() << endl;
+    cout << *l1_out << endl;
+
+    /* ReLU_activation relu;
+    relu.forward(l1_out);
+    matrice * relu_out = relu.get_outputs();
+
+    cout << "ReLU out: " << endl;
+    cout << *relu_out << endl;
+
+    relu.backward(relu_out);
+    matrice * drelu = relu.get_derived_inputs();
+    l1.backward(drelu);
+
+    weights_matice = l1.get_weight_derivatives()->product(-0.001)->add(weights_matice);
+    bias = vector_addition(scalar_product(l1.get_biases_derivatives(), -0.001), bias);
+
+    cout << "Updated weights: " << endl;
+    cout << *weights_matice << endl;
+    cout << "Updated Biases: " << endl;
+    cout << *bias << endl; */
 
     layer_dens l2 = layer_dens(5, 2);
-    l2.forward(l1.get_output());
+    l2.forward(l1_out);
 
     cout << "layer 2 out:" << endl;
     cout << *l2.get_output() << endl;
     
-    cout << "layer 2 out with activatioon:" << endl;
-    cout << *apply_activation(l2.get_output(), rectifeid_linear) << endl;
+    cout << "layer 2 out with activation:" << endl;
+    ReLU_activation relu;
+    relu.forward(l2.get_output());
+    cout << *relu.get_outputs() << endl;
 
     cout << "softmax: " << endl;
-    matrice * soft = soft_max_activation(inputs2());
+    soft_max_activation soft_activation;
+    soft_activation.forward(inputs2());
+    matrice * soft = soft_activation.get_outputs();
     cout << * soft << endl;
 
-    cout << "loss: " << endl;
-    cout << categorical_cross_entropy(soft, inputs2_target()) << endl;
+    soft_activation.backward(inputs2());
+    matrice * bsoft = soft_activation.get_derived_inputs();
+
+    cout << * bsoft << endl;
+
+    //cout << "loss: " << endl;
+    //cout << categorical_cross_entropy(soft, inputs2_target()) << endl;
 
     cout << "accuracy: " << endl;
     cout << calculate_accuracy(soft, inputs2_target()) << endl;

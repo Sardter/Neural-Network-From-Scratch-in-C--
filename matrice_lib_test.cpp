@@ -31,12 +31,31 @@ int main()
     vector<vector<double> > inputs(begin(input), end(input));
     matrice inputs_matrice = matrice(inputs);
 
-    matrice * out = vector_addition(
+    /* matrice * out = vector_addition(
         matrice_multiplication(&inputs_matrice, 
             matrice_transpose(&weights_matrice))
-    , &biases);
+    , &biases); */
+
+    matrice * out = inputs_matrice.product(weights_matrice.transpose())->add(&biases);
     cout << "output: " << endl;
     cout << *out << endl;
+
+    cout << "column 1: " << *out->get_column(1) << endl;
+    cout << "row 1: " << *out->get_row(1) << endl;
+
+    cout << "columns sum: " << *out->columns_sum() << endl;
+    cout << "rows sum: " << *out->rows_sum() << endl;
+
+    int i3[] = {1, 3, 3, 4};
+    vector<int> iv3(begin(i3), end(i3));
+    cout << *discrete_to_one_hot(&iv3, 6) << endl;
+
+    cout << *diag_flat(&iv1) << endl;
+
+    double i4[] = {.7, .1, .2};
+    vector<double> iv4(begin(i4), end(i4));
+    cout << *jacobian_matrice(&iv4) << endl;
+    cout << *jacobian_matrice(&iv4)->product((new matrice(*diag_flat(&iv4)->get_row(0)))->transpose()) << endl;
 
     return 0;
 }
