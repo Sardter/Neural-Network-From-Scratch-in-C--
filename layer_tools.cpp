@@ -44,20 +44,36 @@ void activation_softmax_loss_catogorical_crossentropy::backward(Matrice * inputs
     this->derived_inputs = this->derived_inputs->division(inputs->column_size());
 }
 
-Matrice * generate_rondom_weights(int rows, int columns) {
-    Matrice * weights = new Matrice(rows, columns);
+Matrice * generate_gaugian_weights(int columns, int rows) {
+    Matrice * weights = new Matrice(columns, rows);
 
     default_random_engine generator(0);
     normal_distribution<double> dist(0, 1);
 
-    for (size_t i = 0; i < rows; i++)
+    for (size_t i = 0; i < columns; i++)
     {
-        for (size_t j = 0; j < columns; j++)
+        for (size_t j = 0; j < rows; j++)
         {
             weights->data[i][j] = 0.1 * dist(generator);
         }
     }
-    //cout << *weights;
+    return weights;
+}
+
+Matrice * generate_binomial_weights(int columns, int rows, double rate) {
+    Matrice * weights = new Matrice(columns, rows);
+
+    default_random_engine generator(0);
+    binomial_distribution<double> dist(1, rate);
+
+    for (size_t i = 0; i < columns; i++)
+    {
+        for (size_t j = 0; j < rows; j++)
+        {
+            weights->data[i][j] = 0.1 * dist(generator);
+        }
+    }
+
     return weights;
 }
 

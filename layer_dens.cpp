@@ -9,17 +9,12 @@ layer_dens::layer_dens(
         int input_num, int neuron_num, 
         double WR_L1, double WR_L2, 
         double BR_L1, double BR_L2
-    ) 
+    ) : layer()
 {
-    this->weights = generate_rondom_weights(input_num, neuron_num);
+    this->weights = generate_gaugian_weights(input_num, neuron_num);
     this->biases = default_biases(neuron_num);
-    this->inputs = nullptr;
-
-    this->output = nullptr;
 
     this->biases_derivative = nullptr;
-    this->inputs_derivative = nullptr;
-    this->weights_derivative = nullptr;
 
     this->BR_L1 = BR_L1; this->BR_L2 = BR_L2;
     this->WR_L1 = WR_L1; this->WR_L2 = WR_L2;
@@ -28,17 +23,12 @@ layer_dens::layer_dens(
 layer_dens::layer_dens(
         Matrice * weights, Vector * biases, 
         double WR_L1, double WR_L2, 
-        double BR_L1, double BR_L2) 
+        double BR_L1, double BR_L2) : layer()
 {
     this->weights = weights;
     this->biases = biases;
-    this->inputs = nullptr;
-
-    this->output = nullptr;
 
     this->biases_derivative = nullptr;
-    this->inputs_derivative = nullptr;
-    this->weights_derivative = nullptr;
 
     this->BR_L1 = BR_L1; 
     this->BR_L2 = BR_L2;
@@ -47,13 +37,8 @@ layer_dens::layer_dens(
 }
 
 layer_dens::~layer_dens() {
-    if (this->weights != nullptr) delete this->weights;
     if (this->biases != nullptr) delete this->biases;
-    if (this->output != nullptr) delete this->output;
-    if (this->inputs != nullptr) delete this->inputs;
     if (this->biases_derivative != nullptr) delete this->biases_derivative;
-    if (this->inputs_derivative != nullptr) delete this->inputs_derivative;
-    if (this->weights_derivative != nullptr) delete this->weights_derivative;
 }
 
 void layer_dens::forward(Matrice * inputs) {
@@ -97,39 +82,17 @@ void layer_dens::backward(Matrice * derivated_inputs) {
     this->inputs_derivative = derivated_inputs->dot_product(this->weights->transpose());
 } 
 
-Matrice * layer_dens::get_output() const {
-    return this->output;
-}
 
-Matrice * layer_dens::get_weights() const {
-    return this->weights;
+Vector * layer_dens::get_biases_derivatives() const {
+    return this->biases_derivative;
 }
 
 Vector * layer_dens::get_biases() const {
     return this->biases;
 }
 
-Matrice * layer_dens::get_weight_derivatives() const {
-    return this->weights_derivative;
-}
-Matrice * layer_dens::get_inputs_derivatives() const {
-    return this->inputs_derivative;
-}
-
-Matrice * layer_dens::get_inputs() const {
-    return this->inputs;
-}
-
-Vector * layer_dens::get_biases_derivatives() const {
-    return this->biases_derivative;
-}
-
 void layer_dens::set_biases(Vector * v) {
     this->biases = v;
-}
-
-void layer_dens::set_weights(Matrice * m) {
-    this->weights = m;
 }
 
 double layer_dens::get_weight_regularizer_L1() const 

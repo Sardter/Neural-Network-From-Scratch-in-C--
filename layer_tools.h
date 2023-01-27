@@ -25,7 +25,9 @@ public:
 };
 
 
-Matrice * generate_rondom_weights(int rows, int columns);
+Matrice * generate_gaugian_weights(int columns, int row);
+
+Matrice * generate_binomial_weights(int columns, int row, double rate);
 
 Vector * default_biases(int neurons);
 
