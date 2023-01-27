@@ -8,7 +8,7 @@
 
 using namespace std;
 
-matrice * inputs1() {
+Matrice * inputs1() {
     double i0[] = {1, 2, 3, 2.5};
     vector<double> iv0(begin(i0), end(i0));
     double i1[] = {2, 5, -1, 2};
@@ -18,10 +18,10 @@ matrice * inputs1() {
 
     vector<double> input[] = {iv0, iv1, iv2};
     vector<vector<double> > inputs(begin(input), end(input));
-    return new matrice(inputs);
+    return new Matrice(inputs);
 }
 
-matrice * inputs2() {
+Matrice * inputs2() {
     double i0[] = {4.8, 1.21, 2.385};
     vector<double> iv0(begin(i0), end(i0));
     double i1[] = {8.9, -1.81, 0.2};
@@ -31,10 +31,10 @@ matrice * inputs2() {
 
     vector<double> input[] = {iv0, iv1, iv2};
     vector<vector<double> > inputs(begin(input), end(input));
-    return new matrice(inputs);
+    return new Matrice(inputs);
 }
 
-matrice * weights() {
+Matrice * weights() {
     double w0[] = {0.2, 0.8, -0.5, 1.0};
     vector<double> v0(begin(w0), end(w0));
     double w1[] = {0.5, -0.91, 0.26, -0.5};
@@ -44,7 +44,7 @@ matrice * weights() {
 
     vector<double> weight[] = {v0, v1, v2};
     vector<vector<double> > weights(begin(weight), end(weight));
-    return (new matrice(weights))->transpose();
+    return (new Matrice(weights))->transpose();
 }
 
 vector<double> * biases() {
@@ -60,14 +60,14 @@ vector<int> * inputs2_target() {
 }
 
 int main() {
-    matrice * inputs_matrice = inputs1();
-    matrice * weights_matice = weights();
+    Matrice * inputs_matrice = inputs1();
+    Matrice * weights_matice = weights();
     vector<double> * bias = biases();
 
     //layer_dens l1 = layer_dens(weights_matice, bias);
     layer_dens l1 = layer_dens(4, 5);
     l1.forward(inputs_matrice);
-    matrice * l1_out = l1.get_output();
+    Matrice * l1_out = l1.get_output();
     cout << "layer 1 out:" << endl;
     cout << *l1_out << endl;
 
@@ -104,11 +104,11 @@ int main() {
     cout << "softmax: " << endl;
     soft_max_activation soft_activation;
     soft_activation.forward(inputs2());
-    matrice * soft = soft_activation.get_outputs();
+    Matrice * soft = soft_activation.get_outputs();
     cout << * soft << endl;
 
     soft_activation.backward(inputs2());
-    matrice * bsoft = soft_activation.get_derived_inputs();
+    Matrice * bsoft = soft_activation.get_derived_inputs();
 
     cout << * bsoft << endl;
 

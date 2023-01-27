@@ -3,57 +3,156 @@
 #include <stdexcept>
 #include <string>
 #include <iostream>
+#include <numeric>
 
 using namespace std;
 
-size_t matrice::column_size() const
+Vector::Vector(size_t size, double default_value) 
 {
-    return this->data.size();
+    this->data = vector<double>(size, default_value);
 }
 
-size_t matrice::row_size() const
-{
-    return this->data[0].size();
-}
-
-matrice::matrice(size_t column_size, size_t row_size)
-{
-    this->data = vector<vector<double> >(column_size, vector<double>(row_size, 0));
-}
-
-matrice::matrice(vector<vector<double> > data)
+Vector::Vector(vector<double> data) 
 {
     this->data = data;
 }
 
-matrice::matrice(vector<double> data)
+Vector::Vector(double data[], size_t size) 
+{
+    this->data = vector<double>(data, data + size);
+}
+
+Vector * Vector::copy() const
+{
+    return new Vector(this->data);
+}
+
+double Vector::size() const
+{
+    return this->data.size();
+}
+
+Vector * Vector::product(double scalar) const
+{
+    Vector * product = this->copy();
+    for (size_t i = 0; i < this->data.size(); i++)
+    {
+        product->data[i] *= scalar;
+    }
+    return product;
+}
+
+Vector * Vector::product(Vector * v) const
+{
+    Vector * product = this->copy();
+    for (size_t i = 0; i < this->data.size(); i++)
+    {
+        product->data[i] *= v->data[i];
+    }
+    return product;
+}
+
+double Vector::dot_product(Vector * v) const
+{
+    int n = this->size(), m = v->size();
+    if (n != m)
+        throw invalid_argument("Vectors must be the same size: a ->" + to_string(n) + " b -> " + to_string(m));
+
+    double product = 0;
+    for (size_t i = 0; i < this->size(); i++)
+    {
+        product += this->data[i] * v->data[i];
+    }
+    return product;   
+}
+
+Vector * Vector::add(Vector * v) const
+{
+    Vector * sum = this->copy();
+    for (size_t i = 0; i < this->data.size(); i++)
+    {
+        sum->data[i] += v->data[i];
+    }
+    return sum;
+}
+
+Vector * Vector::subtract(Vector * v) const
+{
+    Vector * sub = this->copy();
+    for (size_t i = 0; i < this->data.size(); i++)
+    {
+        sub->data[i] -= v->data[i];
+    }
+    return sub;
+}
+
+double Vector::sum() const
+{
+    return accumulate(this->data.begin(), this->data.end(), 0);
+}
+
+Vector * Vector::abs() const
+{
+    Vector * res = this->copy();
+    for (size_t i = 0; i < this->data.size(); i++)
+    {
+        res->data[i] = this->data[i] < 0 ? this->data[i] * -1 : this->data[i];
+    }
+    return res;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+size_t Matrice::column_size() const
+{
+    return this->data.size();
+}
+
+size_t Matrice::row_size() const
+{
+    return this->data[0].size();
+}
+
+Matrice::Matrice(size_t column_size, size_t row_size, double default_value)
+{
+    this->data = vector<vector<double> >(column_size, vector<double>(row_size, default_value));
+}
+
+Matrice::Matrice(vector<vector<double> > data)
+{
+    this->data = data;
+}
+
+Matrice::Matrice(vector<double> data)
 {
     this->data = vector<vector<double> >(1, data);
 }
 
-vector<double> * matrice::get_column(int index) const
+Vector * Matrice::get_column(int index) const
 {
-    vector<double> * column = new vector<double>(this->column_size(), 0);
+    Vector * column = new Vector(this->column_size());
     for (size_t i = 0; i < this->column_size(); i++)
     {
-        column->at(i) = this->data[i][index];
+        column->data[i] = this->data[i][index];
     }
     return column;
 }
 
-vector<double> * matrice::get_row(int index) const
+Vector * Matrice::get_row(int index) const
 {
-    return new vector<double>(this->data[index]);
+    return new Vector(this->data[index]);
 }
 
-bool matrice::equal_shape(matrice * m) const 
+
+bool Matrice::equal_shape(Matrice * m) const 
 {
     return this->column_size() == m->column_size() && this->row_size() == m->row_size();
 }
 
-matrice * matrice::copy() const 
+Matrice * Matrice::copy() const 
 {
-    return new matrice(this->data);
+    return new Matrice(this->data);
 }
 
 void _check_size(vector<double> &a, vector<double> &b)
@@ -63,75 +162,27 @@ void _check_size(vector<double> &a, vector<double> &b)
         throw invalid_argument("Vectors must be the same size: a ->" + to_string(n) + " b -> " + to_string(m));
 }
 
-double dot_product(vector<double> &a, vector<double> &b)
+void _check_size(Vector * a, Vector  * b)
 {
-    _check_size(a, b);
-
-    double product = 0;
-    for (size_t i = 0; i < a.size(); i++)
-    {
-        product += a[i] * b[i];
-    }
-    return product;
+    int n = a->data.size(), m = b->data.size();
+    if (n != m)
+        throw invalid_argument("Vectors must be the same size: a ->" + to_string(n) + " b -> " + to_string(m));
 }
 
-vector<double> * scalar_product(vector<double> * a, double b) {
-    vector<double> *product = new vector<double>(*a);
-    for (size_t i = 0; i < a->size(); i++)
-    {
-        product->at(i) *= b;
-    }
-    return product;
-}
-
-vector<double> *dot_product(vector<double> &a, vector<vector<double> > &b)
+Matrice * Matrice::add(Vector * v) const
 {
-    vector<double> *product = new vector<double>;
-
-    for (size_t i = 0; i < b.size(); i++)
-    {
-        product->push_back(dot_product(a, b[i]));
-    }
-
-    return product;
-}
-
-vector<double> *vector_addition(vector<double> * a, vector<double> * b)
-{
-    _check_size(*a, *b);
-
-    for (size_t i = 0; i < (*a).size(); i++)
-    {
-        (*a)[i] += (*b)[i];
-    }
-    return a;
-}
-
-vector<double> *vector_subtraction(vector<double> * a, vector<double> * b)
-{
-    _check_size(*a, *b);
-
-    for (size_t i = 0; i < (*a).size(); i++)
-    {
-        (*a)[i] -= (*b)[i];
-    }
-    return a;
-}
-
-matrice * matrice::add(vector<double> * v) const
-{
-    matrice * res = this->copy();
+    Matrice * res = this->copy();
     for (size_t i = 0; i < res->column_size(); i++)
     {
-        res->data[i] = *vector_addition(&(res->data[i]), v);
+        res->data[i] = v->add(res->get_row(i))->data;
     }
 
     return res;   
 }
 
-matrice * matrice::add(matrice * m) const
+Matrice * Matrice::add(Matrice * m) const
 {
-    matrice * res = this->copy();
+    Matrice * res = this->copy();
     for (size_t i = 0; i < this->column_size(); i++)
     {
         for (size_t j = 0; j < this->row_size(); j++)
@@ -143,12 +194,12 @@ matrice * matrice::add(matrice * m) const
     return res;
 }
 
-matrice * matrice::operator+(vector<double> * v) const
+Matrice * Matrice::operator+(Vector * v) const
 {
     return this->add(v);
 }
 
-matrice * matrice::product(matrice * m) const
+Matrice * Matrice::dot_product(Matrice * m) const
 {
     size_t a_row = this->row_size();
     size_t a_column = this->column_size();
@@ -158,7 +209,7 @@ matrice * matrice::product(matrice * m) const
     if (a_row != b_column)
         throw invalid_argument("Sizes are not equal: a->" + to_string(a_column) + " b->" + to_string(b_row));
 
-    matrice * res = new matrice(a_column, b_row);
+    Matrice * res = new Matrice(a_column, b_row);
 
 
     for (size_t i = 0; i < a_column; i++)
@@ -175,28 +226,64 @@ matrice * matrice::product(matrice * m) const
     return res;
 }
 
-matrice * matrice::product(double x) const
+Matrice * Matrice::product(double x) const
 {
-    matrice * res = this->copy();
+    Matrice * res = this->copy();
     for (size_t i = 0; i < this->column_size(); i++)
     {
         for (size_t j = 0; j < this->row_size(); j++)
         {
             res->data[i][j] *= x;
         }
-        
     }
     return res;
 }
 
-matrice * matrice::operator * (matrice * m) const 
+Matrice * Matrice::product(Matrice * m) const
 {
-    return this->product(m);
+    Matrice * res = this->copy();
+    for (size_t i = 0; i < this->column_size(); i++)
+    {
+        for (size_t j = 0; j < this->row_size(); j++)
+        {
+            res->data[i][j] *= m->data[i][j];
+        } 
+    }
+    return res;
 }
 
-matrice * matrice::division(matrice * m) const
+double Matrice::sum() const
 {
-    matrice * res = this->copy();
+    double sum = 0;
+    for (size_t i = 0; i < this->column_size(); i++)
+    {
+        sum += accumulate(this->data[i].begin(), this->data[i].end(), 0);
+    }
+    
+    return sum;
+}
+
+Matrice * Matrice::abs() const
+{
+    Matrice * res = this->copy();
+    for (size_t i = 0; i < this->column_size(); i++)
+    {
+        for (size_t j = 0; j < this->row_size(); j++)
+        {
+            res->data[i][j] = res->data[i][j] < 0 ? res->data[i][j] * -1 : res->data[i][j];
+        } 
+    }
+    return res;
+}
+
+Matrice * Matrice::operator * (Matrice * m) const 
+{
+    return this->dot_product(m);
+}
+
+Matrice * Matrice::division(Matrice * m) const
+{
+    Matrice * res = this->copy();
     for (size_t i = 0; i < this->column_size(); i++)
     {
         for (size_t j = 0; j < this->row_size(); j++)
@@ -208,9 +295,9 @@ matrice * matrice::division(matrice * m) const
     return res;
 }
 
-matrice * matrice::subtract(matrice * m) const
+Matrice * Matrice::subtract(Matrice * m) const
 {
-    matrice * res = this->copy();
+    Matrice * res = this->copy();
     for (size_t i = 0; i < this->column_size(); i++)
     {
         for (size_t j = 0; j < this->row_size(); j++)
@@ -222,9 +309,9 @@ matrice * matrice::subtract(matrice * m) const
     return res;
 }
 
-matrice * matrice::division(double x) const
+Matrice * Matrice::division(double x) const
 {
-    matrice * res = this->copy();
+    Matrice * res = this->copy();
     for (size_t i = 0; i < this->column_size(); i++)
     {
         for (size_t j = 0; j < this->row_size(); j++)
@@ -236,13 +323,13 @@ matrice * matrice::division(double x) const
     return res;
 }
 
-matrice * matrice::transpose() const
+Matrice * Matrice::transpose() const
 {
     size_t col = this->column_size();
     size_t row = this->row_size();
 
 
-    matrice *res = new matrice(row, col);
+    Matrice *res = new Matrice(row, col);
 
     for (size_t i = 0; i < col; ++i)
     {
@@ -255,48 +342,48 @@ matrice * matrice::transpose() const
     return res;
 }
 
-matrice * matrice::operator ! () const 
+Matrice * Matrice::operator ! () const 
 {
     return this->transpose();
 }
 
-vector<double> * matrice::columns_sum() const 
+Vector * Matrice::columns_sum() const 
 {
     size_t col_size = this->column_size();
     size_t row_size = this->row_size();
-    vector<double> * res = new vector<double>(row_size, 0);
+    Vector * res = new Vector(col_size);
 
     for (size_t i = 0; i < col_size; i++)
     {
         for (size_t j = 0; j < row_size; j++)
         {
-            res->at(j) += this->data[i][j];
+            res->data[j] += this->data[i][j];
         }
     }
     
     return res;
 }
 
-vector<double> * matrice::rows_sum() const 
+Vector * Matrice::rows_sum() const 
 {
     size_t col_size = this->column_size();
     size_t row_size = this->row_size();
-    vector<double> * res = new vector<double>(col_size, 0);
+    Vector * res = new Vector(row_size);
 
     for (size_t i = 0; i < col_size; i++)
     {
         for (size_t j = 0; j < row_size; j++)
         {
-            res->at(i) += this->data[i][j];
+            res->data[i] += this->data[i][j];
         }
     }
     
     return res;
 }
 
-matrice * discrete_to_one_hot(vector<int> * nums, size_t limit) {
+Matrice * discrete_to_one_hot(vector<int> * nums, size_t limit) {
     size_t row_num = nums->size();
-    matrice * res = new matrice(limit, row_num);
+    Matrice * res = new Matrice(limit, row_num);
     for (size_t i = 0; i < row_num; i++)
     {
         res->data[nums->at(i)][i] = 1;
@@ -305,9 +392,9 @@ matrice * discrete_to_one_hot(vector<int> * nums, size_t limit) {
 }
 
 
-matrice * diag_flat(vector<double> * nums) {
+Matrice * diag_flat(vector<double> * nums) {
     size_t size = nums->size();
-    matrice * res = new matrice(size, size);
+    Matrice * res = new Matrice(size, size);
     for (size_t i = 0; i < size; i++)
     {
         res->data[i][i] = nums->at(i);
@@ -315,13 +402,13 @@ matrice * diag_flat(vector<double> * nums) {
     return res;
 }
 
-matrice * jacobian_matrice(vector<double> * input) {
-    matrice * m = new matrice(*input);
+Matrice * jacobian_matrice(vector<double> * input) {
+    Matrice * m = new Matrice(*input);
 
-    return diag_flat(input)->subtract(m->transpose()->product(m));
+    return diag_flat(input)->subtract(m->transpose()->dot_product(m));
 }
 
-ostream& operator << (ostream& stream, matrice m) {
+ostream& operator << (ostream& stream, Matrice m) {
     for (vector<double> i : m.data)
     {
         for (double j : i)
@@ -335,6 +422,14 @@ ostream& operator << (ostream& stream, matrice m) {
 
 ostream& operator << (ostream& stream, vector<double> m) {
     for (double j : m)
+    {
+        stream << j << " ";
+    }
+    return stream << endl;
+}
+
+ostream& operator << (ostream& stream, Vector m) {
+    for (double j : m.data)
     {
         stream << j << " ";
     }

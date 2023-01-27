@@ -26,8 +26,8 @@ private:
     long long iterations;
 
     double momentum;
-    matrice * weight_momentum;
-    vector<double> * bias_momentum;
+    Matrice * weight_momentum;
+    Vector * bias_momentum;
 public:
     stochastic_gradient_descent(double learning_rate = 1, double decay = 0, double momentum = 0);
     ~stochastic_gradient_descent();

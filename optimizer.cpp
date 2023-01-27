@@ -39,40 +39,40 @@ stochastic_gradient_descent::~stochastic_gradient_descent() {
 void stochastic_gradient_descent::update_params(layer_dens * layer) {
     this->pre_update();
 
-    matrice * weights = layer->get_weights();
-    matrice * weights_der = layer->get_weight_derivatives();
+    Matrice * weights = layer->get_weights();
+    Matrice * weights_der = layer->get_weight_derivatives();
 
-    vector<double> * biases = layer->get_biases();
-    vector<double> * biases_der = layer->get_biases_derivatives();
+    Vector * biases = layer->get_biases();
+    Vector * biases_der = layer->get_biases_derivatives();
 
     size_t weight_col = weights->column_size();
     size_t weight_row = weights->row_size();
 
-    matrice * weights_update = nullptr;
-    vector<double> * biases_update = nullptr;
+    Matrice * weights_update = nullptr;
+    Vector * biases_update = nullptr;
 
     if (this->momentum) {
         if (this->weight_momentum == nullptr) {
-            this->weight_momentum = new matrice(weight_col, weight_row);
-            this->bias_momentum = new vector<double>(biases->size(), 0);
+            this->weight_momentum = new Matrice(weight_col, weight_row);
+            this->bias_momentum = new Vector(biases->size());
         }
 
         weights_update = this->weight_momentum->product(
             this->momentum)->subtract(weights_der->product(this->current_learning_rate));
         this->weight_momentum = weights_update;
 
-        biases_update = vector_subtraction(
-            scalar_product(this->bias_momentum, this->momentum), 
-            scalar_product(biases_der, this->current_learning_rate)
-        );
+        biases_update = this->bias_momentum
+            ->product(this->momentum)
+            ->subtract(biases_der
+            ->product(this->current_learning_rate));
         this->bias_momentum = biases_update;
     } else {
         weights_update = weights_der->product(-1 * this->current_learning_rate);
-        biases_update = scalar_product(biases_der, -1 * this->current_learning_rate);
+        biases_update = biases_der->product(-1 * this->current_learning_rate);
     }
 
     layer->set_weights(weights->add(weights_update));
-    layer->set_biases(vector_addition(biases, biases_update));
+    layer->set_biases(biases->add(biases_update));
     this->post_update();
 }
 

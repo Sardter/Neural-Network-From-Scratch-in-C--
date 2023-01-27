@@ -4,7 +4,7 @@
 
 using namespace std;
 
-matrice * soft_max_outputs() {
+Matrice * soft_max_outputs() {
     double i0[] = {0.7, 0.1, 0.2};
     vector<double> iv0(begin(i0), end(i0));
     double i1[] = {0.1, 0.5, 0.4};
@@ -14,7 +14,7 @@ matrice * soft_max_outputs() {
 
     vector<double> input[] = {iv0, iv1, iv2};
     vector<vector<double> > inputs(begin(input), end(input));
-    return new matrice(inputs);
+    return new Matrice(inputs);
 }
 
 vector<int> * targets() {

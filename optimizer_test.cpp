@@ -8,7 +8,7 @@
 
 using namespace std;
 
-matrice * inputs1() {
+Matrice * inputs1() {
     double i0[] = {1, 2, 3, 2.5};
     vector<double> iv0(begin(i0), end(i0));
     double i1[] = {2, 5, -1, 2};
@@ -18,10 +18,10 @@ matrice * inputs1() {
 
     vector<double> input[] = {iv0, iv1, iv2};
     vector<vector<double> > inputs(begin(input), end(input));
-    return new matrice(inputs);
+    return new Matrice(inputs);
 }
 
-matrice * inputs2() {
+Matrice * inputs2() {
     double i0[] = {4.8, 1.21, 2.385};
     vector<double> iv0(begin(i0), end(i0));
     double i1[] = {8.9, -1.81, 0.2};
@@ -31,12 +31,12 @@ matrice * inputs2() {
 
     vector<double> input[] = {iv0, iv1, iv2};
     vector<vector<double> > inputs(begin(input), end(input));
-    return new matrice(inputs);
+    return new Matrice(inputs);
 }
 
 int main() {
     stochastic_gradient_descent optimizer(0.001, 0.1, 0.5);
-    layer_dens l1(4,5);
+    layer_dens l1(4,5, 0.01, 0.01, 0.01, 0.01);
     l1.forward(inputs1());
     ReLU_activation r1;
 
@@ -58,7 +58,7 @@ int main() {
             cout << *l1.get_weights() << endl;
             cout << *l1.get_biases() << endl;
         }
-        
+
         l1.forward(l1.get_inputs());
     }
     

@@ -6,70 +6,97 @@
 
 using namespace std;
 
-struct matrice
+struct Vector {
+    vector<double> data;
+
+    Vector(size_t size, double default_value = 0);
+
+    Vector(vector<double> data);
+
+    Vector(double data[], size_t size);
+
+    Vector * copy() const;
+
+    Vector * product(double scalar) const;
+
+    Vector * product(Vector * v) const;
+
+    double dot_product(Vector * v) const;
+
+    Vector * add(Vector * v) const;
+
+    Vector * subtract(Vector * v) const;
+
+    Vector * abs() const;
+
+    double sum() const;
+
+    double size() const;
+};
+
+
+struct Matrice
 {
     vector<vector<double> > data;
 
-    vector<double> * get_column(int index) const;
-    vector<double> * get_row(int index) const;
+    Vector * get_column(int index) const;
+    Vector * get_row(int index) const;
 
     size_t row_size() const;
     size_t column_size() const;
 
-    matrice(size_t column_size, size_t row_size);
+    Matrice(size_t column_size, size_t row_size, double default_value = 0);
 
-    matrice(vector<vector<double> > data);
+    Matrice(vector<vector<double> > data);
 
-    matrice(vector<double> data);
+    Matrice(vector<double> data);
 
-    bool equal_shape(matrice * m) const;
+    bool equal_shape(Matrice * m) const;
 
-    matrice * copy() const;
+    Matrice * copy() const;
 
-    matrice * add(vector<double> * v) const;
+    Matrice * add(Vector * v) const;
 
-    matrice * add(matrice * m) const;
+    Matrice * add(Matrice * m) const;
 
-    matrice * subtract(matrice * m) const;
+    Matrice * subtract(Matrice * m) const;
 
-    matrice * product(matrice * m) const;
+    Matrice * dot_product(Matrice * m) const;
 
-    matrice * product(double x) const;
+    double sum() const;
 
-    matrice * division(matrice * m) const;
+    Matrice * abs() const;
 
-    matrice * division(double x) const;
+    Matrice * product(Matrice * m) const;
 
-    matrice * transpose() const;
+    Matrice * product(double x) const;
 
-    vector<double> * columns_sum() const;
+    Matrice * division(Matrice * m) const;
 
-    vector<double> * rows_sum() const;
+    Matrice * division(double x) const;
 
-    matrice *  operator + (vector<double> * v) const;
+    Matrice * transpose() const;
 
-    matrice * operator * (matrice * m) const;
+    Vector * columns_sum() const;
 
-    matrice * operator ! () const;
+    Vector * rows_sum() const;
+
+    Matrice *  operator + (Vector * v) const;
+
+    Matrice * operator * (Matrice * m) const;
+
+    Matrice * operator ! () const;
 };
 
-double dot_product(vector<double> * a, vector<double> * b);
-
-vector<double> * scalar_product(vector<double> * a, double b);
-
-vector<double> *vector_addition(vector<double> * a, vector<double> * b);
-
-vector<double> *vector_subtraction(vector<double> * a, vector<double> * b);
-
-vector<double> *dot_product(vector<double> &a, vector<vector<double> > &b);
-
-ostream& operator << (ostream& stream, matrice m);
+ostream& operator << (ostream& stream, Matrice m);
 
 ostream& operator << (ostream& stream, vector<double> m);
 
-matrice * discrete_to_one_hot(vector<int> * nums, size_t limit);
+ostream& operator << (ostream& stream, Vector m);
 
-matrice * diag_flat(vector<double> * nums);
+Matrice * discrete_to_one_hot(vector<int> * nums, size_t limit);
 
-matrice * jacobian_matrice(vector<double> * input);
+Matrice * diag_flat(vector<double> * nums);
+
+Matrice * jacobian_matrice(vector<double> * input);
 #endif

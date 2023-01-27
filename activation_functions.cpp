@@ -21,9 +21,9 @@ activaion_function::~activaion_function()
     if (this->derived_inputs != nullptr) delete this->derived_inputs;
 }
 
-matrice * activaion_function::apply_function(matrice * data, double (*func)(double)) const
+Matrice * activaion_function::apply_function(Matrice * data, double (*func)(double)) const
 {
-    matrice * res = data->copy();
+    Matrice * res = data->copy();
     for (size_t i = 0; i < data->column_size(); i++)
     {
         for (size_t j = 0; j < data->row_size(); j++)
@@ -34,45 +34,45 @@ matrice * activaion_function::apply_function(matrice * data, double (*func)(doub
     return res;
 }
 
-matrice * activaion_function::get_derived_inputs() const
+Matrice * activaion_function::get_derived_inputs() const
 {
     return this->derived_inputs;
 }
 
-matrice * activaion_function::get_outputs() const
+Matrice * activaion_function::get_outputs() const
 {
     return this->outputs;
 }
 
-void step_activation::forward(matrice * inputs)
+void step_activation::forward(Matrice * inputs)
 {
     this->inputs = inputs->copy();
     this->outputs = this->apply_function(inputs , step_function);
 }
 
-void step_activation::backward(matrice * derived_inputs) 
+void step_activation::backward(Matrice * derived_inputs) 
 {
    // this->derived_inputs = this->apply_function(inputs, step_function_derivative);
 }
 
-void sigmoid_activation::forward(matrice * inputs) 
+void sigmoid_activation::forward(Matrice * inputs) 
 {
     this->inputs = inputs->copy();
     this->outputs = this->apply_function(inputs , sigmoid_function);
 }
 
-void sigmoid_activation::backward(matrice * derived_inputs) 
+void sigmoid_activation::backward(Matrice * derived_inputs) 
 {
     //this->derived_inputs = this->apply_function(inputs, sigmoid_function_derivative);
 }
 
-void ReLU_activation::forward(matrice * inputs) 
+void ReLU_activation::forward(Matrice * inputs) 
 {
     this->inputs = inputs->copy();
     this->outputs = this->apply_function(inputs , ReLU_function);
 }
 
-void ReLU_activation::backward(matrice * derived_inputs) 
+void ReLU_activation::backward(Matrice * derived_inputs) 
 {
     this->derived_inputs = derived_inputs->copy();
 
@@ -89,7 +89,7 @@ void ReLU_activation::backward(matrice * derived_inputs)
     }
 }
 
-void soft_max_activation::forward(matrice * inputs)
+void soft_max_activation::forward(Matrice * inputs)
 {
     this->inputs = inputs->copy();
     this->outputs = inputs->copy();
@@ -116,18 +116,18 @@ void soft_max_activation::forward(matrice * inputs)
     }
 }
 
-void soft_max_activation::backward(matrice * derived_inputs)
+void soft_max_activation::backward(Matrice * derived_inputs)
 {
     size_t col_size = derived_inputs->column_size();
     size_t row_size = derived_inputs->row_size();
 
-    this->derived_inputs = new matrice(col_size, row_size);
+    this->derived_inputs = new Matrice(col_size, row_size);
     for (size_t i = 0; i < col_size; i++)
     {
-        matrice * jacob = jacobian_matrice(&this->outputs->data[i])->
-            product((new matrice(derived_inputs->data[i]))->transpose());
+        Matrice * jacob = jacobian_matrice(&this->outputs->data[i])->
+            dot_product((new Matrice(derived_inputs->data[i]))->transpose());
         
-        this->derived_inputs->data[i] = *jacob->get_column(0);
+        this->derived_inputs->data[i] = jacob->get_column(0)->data;
     }
 }
 

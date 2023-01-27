@@ -2,6 +2,7 @@
 #define __LOSS
 
 #include "matrice_lib.h"
+#include "layer_dens.h"
 #include <vector>
 #include <stdexcept>
 
@@ -9,41 +10,43 @@ using namespace std;
 
 class loss_function {
 protected:
-    matrice * inputs_derivatives;
+    Matrice * inputs_derivatives;
 public:
     loss_function();
     ~loss_function();
 
-    double loss_percentage(matrice * input, vector<int> * target);
+    double loss_percentage(Matrice * input, vector<int> * target);
 
-    double loss_percentage(matrice * input, matrice * target);
+    double loss_percentage(Matrice * input, Matrice * target);
 
-    vector<double> * forward(matrice * input, vector<int> * target) {
+    Vector * forward(Matrice * input, vector<int> * target) {
         throw invalid_argument("Unimplemented");
     }
 
-    vector<double> * forward(matrice * input, matrice * target) {
+    Vector * forward(Matrice * input, Matrice * target) {
         throw invalid_argument("Unimplemented");
     }
 
-    void backward(matrice * input, vector<int> * target) {
+    void backward(Matrice * input, vector<int> * target) {
         throw invalid_argument("Unimplemented");
     }
 
-    void backward(matrice * input, matrice * target) {
+    void backward(Matrice * input, Matrice * target) {
         throw invalid_argument("Unimplemented");
     }
+
+    double regularization_loss(layer_dens * layer) const;
 };
 
 class categorical_cross_entropy : public loss_function {
 public:
-    vector<double> * forward(matrice * input, vector<int> * target);
+    Vector * forward(Matrice * input, vector<int> * target);
 
-    vector<double> * forward(matrice * input, matrice * target);
+    Vector * forward(Matrice * input, Matrice * target);
 
-    void backward(matrice * input, vector<int> * target);
+    void backward(Matrice * input, vector<int> * target);
 
-    void backward(matrice * input, matrice * target);
+    void backward(Matrice * input, Matrice * target);
 };
 
 

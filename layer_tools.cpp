@@ -18,22 +18,22 @@ activation_softmax_loss_catogorical_crossentropy::~activation_softmax_loss_catog
     if (this->derived_inputs != nullptr) delete this->derived_inputs;
 }
 
-matrice * activation_softmax_loss_catogorical_crossentropy::get_output() const {
+Matrice * activation_softmax_loss_catogorical_crossentropy::get_output() const {
     return this->output;
 }
 
-matrice * activation_softmax_loss_catogorical_crossentropy::get_derived_inputs() const {
+Matrice * activation_softmax_loss_catogorical_crossentropy::get_derived_inputs() const {
     return this->derived_inputs;
 }
 
-double activation_softmax_loss_catogorical_crossentropy::forward(matrice * inputs, vector<int> * targets) {
+double activation_softmax_loss_catogorical_crossentropy::forward(Matrice * inputs, vector<int> * targets) {
     this->activation.forward(inputs);
     this->output = this->activation.get_outputs();
 
     return this->loss.loss_percentage(inputs, targets);
 }
 
-void activation_softmax_loss_catogorical_crossentropy::backward(matrice * inputs, vector<int> * targets) {
+void activation_softmax_loss_catogorical_crossentropy::backward(Matrice * inputs, vector<int> * targets) {
     cout << "here" << endl;
     this->derived_inputs = inputs->copy();
     for (size_t i = 0; i < inputs->column_size(); i++)
@@ -44,8 +44,8 @@ void activation_softmax_loss_catogorical_crossentropy::backward(matrice * inputs
     this->derived_inputs = this->derived_inputs->division(inputs->column_size());
 }
 
-matrice * generate_rondom_weights(int rows, int columns) {
-    matrice * weights = new matrice(rows, columns);
+Matrice * generate_rondom_weights(int rows, int columns) {
+    Matrice * weights = new Matrice(rows, columns);
 
     default_random_engine generator(0);
     normal_distribution<double> dist(0, 1);
@@ -61,11 +61,11 @@ matrice * generate_rondom_weights(int rows, int columns) {
     return weights;
 }
 
-vector<double> * default_biases(int neurons) {
-    return new vector<double>(neurons, 0);
+Vector * default_biases(int neurons) {
+    return new Vector(neurons);
 }
 
-double calculate_accuracy(matrice * data, vector<int> * targets) {
+double calculate_accuracy(Matrice * data, vector<int> * targets) {
     double sum = 0;
     for (size_t i = 0; i < data->column_size(); i++)
     {
