@@ -63,7 +63,7 @@ void sigmoid_activation::forward(Matrice * inputs)
 
 void sigmoid_activation::backward(Matrice * derived_inputs) 
 {
-    //this->derived_inputs = this->apply_function(inputs, sigmoid_function_derivative);
+    this->derived_inputs = derived_inputs->product(this->outputs->product(-1)->add(1)->product(this->outputs));
 }
 
 void ReLU_activation::forward(Matrice * inputs) 
@@ -140,7 +140,7 @@ double step_function_derivative(double x) {
 }
 
 double sigmoid_function(double x) {
-    return x / (1 + abs(x));
+    return 1 / (1 + exp(-x));
 }
 
 double sigmoid_function_derivative(double x) {

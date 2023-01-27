@@ -194,6 +194,20 @@ Matrice * Matrice::add(Matrice * m) const
     return res;
 }
 
+Matrice * Matrice::add(double x) const
+{
+    Matrice * res = this->copy();
+    for (size_t i = 0; i < res->column_size(); i++)
+    {
+        for (size_t j = 0; j < this->row_size(); j++)
+        {
+            res->data[i][j] += x;
+        }
+    }
+
+    return res;   
+}
+
 Matrice * Matrice::operator+(Vector * v) const
 {
     return this->add(v);

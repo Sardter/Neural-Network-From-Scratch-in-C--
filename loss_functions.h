@@ -49,5 +49,16 @@ public:
     void backward(Matrice * input, Matrice * target);
 };
 
+class binary_cross_entropy : public loss_function {
+public:
+    //Vector * forward(Matrice * input, vector<int> * target);
+
+    Vector * forward(Matrice * input, Matrice * target);
+
+    //void backward(Matrice * input, vector<int> * target);
+
+    void backward(Matrice * input, Matrice * target);
+};
+
 
 #endif

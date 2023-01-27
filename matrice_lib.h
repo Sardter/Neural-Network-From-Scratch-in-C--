@@ -59,6 +59,8 @@ struct Matrice
 
     Matrice * add(Matrice * m) const;
 
+    Matrice * add(double x) const;
+
     Matrice * subtract(Matrice * m) const;
 
     Matrice * dot_product(Matrice * m) const;
