@@ -5,11 +5,11 @@
 
 using namespace std;
 
-layer_dens::layer_dens(
+Layer_Dens::Layer_Dens(
         int input_num, int neuron_num, 
         double WR_L1, double WR_L2, 
         double BR_L1, double BR_L2
-    ) : layer()
+    ) : Layer()
 {
     this->weights = generate_gaugian_weights(input_num, neuron_num);
     this->biases = default_biases(neuron_num);
@@ -20,10 +20,10 @@ layer_dens::layer_dens(
     this->WR_L1 = WR_L1; this->WR_L2 = WR_L2;
 }
 
-layer_dens::layer_dens(
+Layer_Dens::Layer_Dens(
         Matrice * weights, Vector * biases, 
         double WR_L1, double WR_L2, 
-        double BR_L1, double BR_L2) : layer()
+        double BR_L1, double BR_L2) : Layer()
 {
     this->weights = weights;
     this->biases = biases;
@@ -36,17 +36,17 @@ layer_dens::layer_dens(
     this->WR_L2 = WR_L2;
 }
 
-layer_dens::~layer_dens() {
+Layer_Dens::~Layer_Dens() {
     if (this->biases != nullptr) delete this->biases;
     if (this->biases_derivative != nullptr) delete this->biases_derivative;
 }
 
-void layer_dens::forward(Matrice * inputs) {
+void Layer_Dens::forward(Matrice * inputs) {
     this->output = inputs->dot_product(this->weights)->add(this->biases);
     this->inputs = inputs->copy();
 }
 
-void layer_dens::backward(Matrice * derivated_inputs) {
+void Layer_Dens::backward(Matrice * derivated_inputs) {
     this->weights_derivative = this->inputs->transpose()->dot_product(derivated_inputs);
     this->biases_derivative = derivated_inputs->columns_sum();
 
@@ -83,34 +83,34 @@ void layer_dens::backward(Matrice * derivated_inputs) {
 } 
 
 
-Vector * layer_dens::get_biases_derivatives() const {
+Vector * Layer_Dens::get_biases_derivatives() const {
     return this->biases_derivative;
 }
 
-Vector * layer_dens::get_biases() const {
+Vector * Layer_Dens::get_biases() const {
     return this->biases;
 }
 
-void layer_dens::set_biases(Vector * v) {
+void Layer_Dens::set_biases(Vector * v) {
     this->biases = v;
 }
 
-double layer_dens::get_weight_regularizer_L1() const 
+double Layer_Dens::get_weight_regularizer_L1() const 
 {
     return this->WR_L1;
 }
 
-double layer_dens::get_weight_regularizer_L2() const 
+double Layer_Dens::get_weight_regularizer_L2() const 
 {
     return this->WR_L2;
 }
 
-double layer_dens::get_bias_regularizer_L1() const 
+double Layer_Dens::get_bias_regularizer_L1() const 
 {
     return this->BR_L1;
 }
 
-double layer_dens::get_bias_regularizer_L2() const 
+double Layer_Dens::get_bias_regularizer_L2() const 
 {
     return this->BR_L2;
 }

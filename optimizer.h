@@ -7,18 +7,18 @@
 
 using namespace std;
 
-class optimizer
+class Optimizer
 {
 protected:
     double learning_rate;
 public:
-    optimizer(double learning_rate);
-    ~optimizer();
+    Optimizer(double learning_rate);
+    ~Optimizer();
 
-    void update_params(layer_dens * layer);
+    void update_params(Layer_Dens * layer);
 };
 
-class stochastic_gradient_descent: public optimizer
+class Stochastic_Gradient_Descent: public Optimizer
 {
 private:
     double current_learning_rate;
@@ -29,12 +29,12 @@ private:
     Matrice * weight_momentum;
     Vector * bias_momentum;
 public:
-    stochastic_gradient_descent(double learning_rate = 1, double decay = 0, double momentum = 0);
-    ~stochastic_gradient_descent();
+    Stochastic_Gradient_Descent(double learning_rate = 1, double decay = 0, double momentum = 0);
+    ~Stochastic_Gradient_Descent();
 
     void pre_update();
     void post_update();
-    void update_params(layer_dens * layer);
+    void update_params(Layer_Dens * layer);
 };
 
 

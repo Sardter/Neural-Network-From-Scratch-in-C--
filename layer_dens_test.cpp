@@ -65,7 +65,7 @@ int main() {
     vector<double> * bias = biases();
 
     //layer_dens l1 = layer_dens(weights_matice, bias);
-    layer_dens l1 = layer_dens(4, 5);
+    Layer_Dens l1 = Layer_Dens(4, 5);
     l1.forward(inputs_matrice);
     Matrice * l1_out = l1.get_output();
     cout << "layer 1 out:" << endl;
@@ -90,7 +90,7 @@ int main() {
     cout << "Updated Biases: " << endl;
     cout << *bias << endl; */
 
-    layer_dens l2 = layer_dens(5, 2);
+    Layer_Dens l2 = Layer_Dens(5, 2);
     l2.forward(l1_out);
 
     cout << "layer 2 out:" << endl;
@@ -102,7 +102,7 @@ int main() {
     cout << *relu.get_outputs() << endl;
 
     cout << "softmax: " << endl;
-    soft_max_activation soft_activation;
+    Softmax_Activation soft_activation;
     soft_activation.forward(inputs2());
     Matrice * soft = soft_activation.get_outputs();
     cout << * soft << endl;

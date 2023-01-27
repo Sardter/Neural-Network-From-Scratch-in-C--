@@ -4,15 +4,15 @@
 #include "matrice_lib.h"
 #include <functional>
 
-class activaion_function
+class Activaion_Function
 {
 protected:
     Matrice * inputs;
     Matrice * derived_inputs;
     Matrice * outputs;
 public:
-    activaion_function();
-    ~activaion_function();
+    Activaion_Function();
+    ~Activaion_Function();
 
     void forward(Matrice * inputs) {}
     void backward(Matrice * derived_inputs) {}
@@ -24,7 +24,7 @@ public:
 };
 
 
-class linear_activation : public activaion_function 
+class Linear_Activation : public Activaion_Function 
 {
 public:
 
@@ -32,7 +32,7 @@ public:
     void backward(Matrice * derived_inputs);
 };
 
-class sigmoid_activation : public activaion_function 
+class Sigmoid_Activation : public Activaion_Function 
 {
 public:
 
@@ -40,7 +40,7 @@ public:
     void backward(Matrice * derived_inputs);
 };
 
-class ReLU_activation : public activaion_function 
+class ReLU_activation : public Activaion_Function 
 {
 public:
 
@@ -48,7 +48,7 @@ public:
     void backward(Matrice * derived_inputs);
 };
 
-class soft_max_activation : public activaion_function 
+class Softmax_Activation : public Activaion_Function 
 {
 public:
 

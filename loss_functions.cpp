@@ -6,25 +6,25 @@
 
 using namespace std;
 
-loss_function::loss_function() {
+Loss_Function::Loss_Function() {
     this->inputs_derivatives = nullptr;
 }
 
-loss_function::~loss_function() {
+Loss_Function::~Loss_Function() {
     if (this->inputs_derivatives != nullptr) delete this->inputs_derivatives;
 }
 
-double loss_function::loss_percentage(Matrice * input, vector<int> * target) {
+double Loss_Function::loss_percentage(Matrice * input, vector<int> * target) {
     Vector losses = *this->forward(input, target);
     return accumulate(losses.data.begin(), losses.data.end(), 0) / losses.size();
 }
 
-double loss_function::loss_percentage(Matrice * input, Matrice * target) {
+double Loss_Function::loss_percentage(Matrice * input, Matrice * target) {
     Vector losses = *this->forward(input, target);
     return accumulate(losses.data.begin(), losses.data.end(), 0) / losses.size();
 }
 
-double loss_function::regularization_loss(layer_dens * layer) const
+double Loss_Function::regularization_loss(Layer_Dens * layer) const
 {
     double loss = 0;
 

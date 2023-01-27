@@ -2,7 +2,7 @@
 #include "matrice_lib.h"
 #include <stdexcept>
 
-layer::layer() {
+Layer::Layer() {
     this->weights = nullptr;
     this->inputs = nullptr;
 
@@ -12,7 +12,7 @@ layer::layer() {
     this->weights_derivative = nullptr;
 }
 
-layer::~layer() {
+Layer::~Layer() {
     if (this->weights != nullptr) delete this->weights;
     if (this->output != nullptr) delete this->output;
     if (this->inputs != nullptr) delete this->inputs;
@@ -20,33 +20,33 @@ layer::~layer() {
     if (this->weights_derivative != nullptr) delete this->weights_derivative;
 }
 
-Matrice * layer::get_output() const {
+Matrice * Layer::get_output() const {
     return this->output;
 }
 
-Matrice * layer::get_weights() const {
+Matrice * Layer::get_weights() const {
     return this->weights;
 }
 
-Matrice * layer::get_weight_derivatives() const {
+Matrice * Layer::get_weight_derivatives() const {
     return this->weights_derivative;
 }
-Matrice * layer::get_inputs_derivatives() const {
+Matrice * Layer::get_inputs_derivatives() const {
     return this->inputs_derivative;
 }
 
-Matrice * layer::get_inputs() const {
+Matrice * Layer::get_inputs() const {
     return this->inputs;
 }
 
-void layer::set_weights(Matrice * m) {
+void Layer::set_weights(Matrice * m) {
     this->weights = m;
 }
 
-void layer::forward(Matrice * inputs) {
+void Layer::forward(Matrice * inputs) {
     throw invalid_argument("Unimplemented");
 }
 
-void layer::backward(Matrice * derivated_inputs) {
+void Layer::backward(Matrice * derivated_inputs) {
     throw invalid_argument("Unimplemented");
 }

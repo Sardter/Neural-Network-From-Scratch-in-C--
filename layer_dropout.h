@@ -4,13 +4,13 @@
 #include "layer.h"
 #include "matrice_lib.h"
 
-class layer_dropout : public layer
+class Layer_Dropout : public Layer
 {
 private:
     double rate;
 public:
-    layer_dropout(double rate);
-    ~layer_dropout();
+    Layer_Dropout(double rate);
+    ~Layer_Dropout();
 
     void forward(Matrice * inputs);
     void backward(Matrice * derivated_inputs);

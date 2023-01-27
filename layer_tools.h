@@ -7,15 +7,15 @@
 
 using namespace std;
 
-class activation_softmax_loss_catogorical_crossentropy {
+class Activation_Softmax_Loss_Catogorical_Crossentropy {
 private:
     Matrice * output;
     Matrice * derived_inputs;
-    soft_max_activation activation;
+    Softmax_Activation activation;
     categorical_cross_entropy loss;
 public:
-    activation_softmax_loss_catogorical_crossentropy();
-    ~activation_softmax_loss_catogorical_crossentropy();
+    Activation_Softmax_Loss_Catogorical_Crossentropy();
+    ~Activation_Softmax_Loss_Catogorical_Crossentropy();
 
     double forward(Matrice * inputs, vector<int> * targets);
     void backward(Matrice * inputs, vector<int> * targets);

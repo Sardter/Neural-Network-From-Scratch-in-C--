@@ -35,8 +35,8 @@ Matrice * inputs2() {
 }
 
 int main() {
-    stochastic_gradient_descent optimizer(0.001, 0.1, 0.5);
-    layer_dens l1(4,5, 0.01, 0.01, 0.01, 0.01);
+    Stochastic_Gradient_Descent optimizer(0.001, 0.1, 0.5);
+    Layer_Dens l1(4,5, 0.01, 0.01, 0.01, 0.01);
     l1.forward(inputs1());
     ReLU_activation r1;
 

@@ -3,7 +3,7 @@
 
 #include "matrice_lib.h"
 
-class layer
+class Layer
 {
 protected:
     Matrice * weights;
@@ -14,8 +14,8 @@ protected:
     Matrice * weights_derivative;
     Matrice * inputs_derivative;
 public:
-    layer();
-    ~layer();
+    Layer();
+    ~Layer();
 
     void set_weights(Matrice * m);
 

@@ -8,32 +8,32 @@
 
 using namespace std;
 
-activation_softmax_loss_catogorical_crossentropy::activation_softmax_loss_catogorical_crossentropy() {
+Activation_Softmax_Loss_Catogorical_Crossentropy::Activation_Softmax_Loss_Catogorical_Crossentropy() {
     this->output = nullptr;
     this->derived_inputs = nullptr;
 }
 
-activation_softmax_loss_catogorical_crossentropy::~activation_softmax_loss_catogorical_crossentropy() {
+Activation_Softmax_Loss_Catogorical_Crossentropy::~Activation_Softmax_Loss_Catogorical_Crossentropy() {
     if (this->output != nullptr) delete this->output;
     if (this->derived_inputs != nullptr) delete this->derived_inputs;
 }
 
-Matrice * activation_softmax_loss_catogorical_crossentropy::get_output() const {
+Matrice * Activation_Softmax_Loss_Catogorical_Crossentropy::get_output() const {
     return this->output;
 }
 
-Matrice * activation_softmax_loss_catogorical_crossentropy::get_derived_inputs() const {
+Matrice * Activation_Softmax_Loss_Catogorical_Crossentropy::get_derived_inputs() const {
     return this->derived_inputs;
 }
 
-double activation_softmax_loss_catogorical_crossentropy::forward(Matrice * inputs, vector<int> * targets) {
+double Activation_Softmax_Loss_Catogorical_Crossentropy::forward(Matrice * inputs, vector<int> * targets) {
     this->activation.forward(inputs);
     this->output = this->activation.get_outputs();
 
     return this->loss.loss_percentage(inputs, targets);
 }
 
-void activation_softmax_loss_catogorical_crossentropy::backward(Matrice * inputs, vector<int> * targets) {
+void Activation_Softmax_Loss_Catogorical_Crossentropy::backward(Matrice * inputs, vector<int> * targets) {
     cout << "here" << endl;
     this->derived_inputs = inputs->copy();
     for (size_t i = 0; i < inputs->column_size(); i++)

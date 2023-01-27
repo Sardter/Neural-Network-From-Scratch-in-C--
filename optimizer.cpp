@@ -6,22 +6,22 @@
 
 using namespace std;
 
-optimizer::optimizer(double learning_rate) {
+Optimizer::Optimizer(double learning_rate) {
     this->learning_rate = learning_rate;
 }
 
-optimizer::~optimizer() {
+Optimizer::~Optimizer() {
 
 }
 
-void optimizer::update_params(layer_dens * layer) {
+void Optimizer::update_params(Layer_Dens * layer) {
     throw invalid_argument("Abstract Function Called");
 }
 
-stochastic_gradient_descent::stochastic_gradient_descent(
+Stochastic_Gradient_Descent::Stochastic_Gradient_Descent(
     double learning_rate, 
     double decay,
-    double momentum) : optimizer(learning_rate) {
+    double momentum) : Optimizer(learning_rate) {
         this->current_learning_rate = learning_rate;
         this->decay = decay;
         this->iterations = 0;
@@ -31,12 +31,12 @@ stochastic_gradient_descent::stochastic_gradient_descent(
         this->bias_momentum = nullptr;
 }
 
-stochastic_gradient_descent::~stochastic_gradient_descent() {
+Stochastic_Gradient_Descent::~Stochastic_Gradient_Descent() {
     if (this->weight_momentum != nullptr) delete this->weight_momentum;
     if (this->bias_momentum != nullptr) delete this->bias_momentum;
 }
 
-void stochastic_gradient_descent::update_params(layer_dens * layer) {
+void Stochastic_Gradient_Descent::update_params(Layer_Dens * layer) {
     this->pre_update();
 
     Matrice * weights = layer->get_weights();
@@ -76,12 +76,12 @@ void stochastic_gradient_descent::update_params(layer_dens * layer) {
     this->post_update();
 }
 
-void stochastic_gradient_descent::pre_update() {
+void Stochastic_Gradient_Descent::pre_update() {
     if (this->decay) {
         this->current_learning_rate = this->learning_rate * (1. / (1. + this->decay * this->iterations));
     }
 }
 
-void stochastic_gradient_descent::post_update() {
+void Stochastic_Gradient_Descent::post_update() {
     this->iterations++;
 }

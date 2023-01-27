@@ -5,7 +5,7 @@
 #include "matrice_lib.h"
 #include "vector"
 
-class layer_dens: public layer
+class Layer_Dens: public Layer
 {
 private:
     Vector * biases;
@@ -17,16 +17,16 @@ private:
     // bias regularizer
     double BR_L1, BR_L2;
 public:
-    layer_dens(
+    Layer_Dens(
         int input_num, int neoron_num, 
         double WR_L1 = 0, double WR_L2 = 0, 
         double BR_L1 = 0, double BR_L2 = 0
     );
-    layer_dens(Matrice * weights, Vector * biases, 
+    Layer_Dens(Matrice * weights, Vector * biases, 
         double WR_L1 = 0, double WR_L2 = 0, 
         double BR_L1 = 0, double BR_L2 = 0
     );
-    ~layer_dens();
+    ~Layer_Dens();
 
     void forward(Matrice * inputs);
     void backward(Matrice * derivated_inputs);

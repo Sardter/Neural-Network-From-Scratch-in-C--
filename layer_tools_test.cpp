@@ -23,7 +23,7 @@ vector<int> * targets() {
 }
 
 int main() {
-    activation_softmax_loss_catogorical_crossentropy sl;
+    Activation_Softmax_Loss_Catogorical_Crossentropy sl;
     sl.backward(soft_max_outputs(), targets());
     cout << *sl.get_derived_inputs() << endl;
 }

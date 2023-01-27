@@ -7,21 +7,21 @@
 
 using namespace std;
 
-activaion_function::activaion_function() 
+Activaion_Function::Activaion_Function() 
 {
     this->inputs = nullptr;
     this->outputs = nullptr;
     this->derived_inputs = nullptr;
 }
 
-activaion_function::~activaion_function() 
+Activaion_Function::~Activaion_Function() 
 {
     if (this->inputs != nullptr) delete this->inputs;
     if (this->outputs != nullptr) delete this->outputs;
     if (this->derived_inputs != nullptr) delete this->derived_inputs;
 }
 
-Matrice * activaion_function::apply_function(Matrice * data, double (*func)(double)) const
+Matrice * Activaion_Function::apply_function(Matrice * data, double (*func)(double)) const
 {
     Matrice * res = data->copy();
     for (size_t i = 0; i < data->column_size(); i++)
@@ -34,34 +34,34 @@ Matrice * activaion_function::apply_function(Matrice * data, double (*func)(doub
     return res;
 }
 
-Matrice * activaion_function::get_derived_inputs() const
+Matrice * Activaion_Function::get_derived_inputs() const
 {
     return this->derived_inputs;
 }
 
-Matrice * activaion_function::get_outputs() const
+Matrice * Activaion_Function::get_outputs() const
 {
     return this->outputs;
 }
 
-void linear_activation::forward(Matrice * inputs)
+void Linear_Activation::forward(Matrice * inputs)
 {
     this->inputs = inputs->copy();
     this->outputs = inputs->copy();
 }
 
-void linear_activation::backward(Matrice * derived_inputs) 
+void Linear_Activation::backward(Matrice * derived_inputs) 
 {
    this->derived_inputs = derived_inputs->copy();
 }
 
-void sigmoid_activation::forward(Matrice * inputs) 
+void Sigmoid_Activation::forward(Matrice * inputs) 
 {
     this->inputs = inputs->copy();
     this->outputs = this->apply_function(inputs , sigmoid_function);
 }
 
-void sigmoid_activation::backward(Matrice * derived_inputs) 
+void Sigmoid_Activation::backward(Matrice * derived_inputs) 
 {
     this->derived_inputs = derived_inputs->product(this->outputs->product(-1)->add(1)->product(this->outputs));
 }
@@ -89,7 +89,7 @@ void ReLU_activation::backward(Matrice * derived_inputs)
     }
 }
 
-void soft_max_activation::forward(Matrice * inputs)
+void Softmax_Activation::forward(Matrice * inputs)
 {
     this->inputs = inputs->copy();
     this->outputs = inputs->copy();
@@ -116,7 +116,7 @@ void soft_max_activation::forward(Matrice * inputs)
     }
 }
 
-void soft_max_activation::backward(Matrice * derived_inputs)
+void Softmax_Activation::backward(Matrice * derived_inputs)
 {
     size_t col_size = derived_inputs->column_size();
     size_t row_size = derived_inputs->row_size();

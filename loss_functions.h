@@ -8,12 +8,12 @@
 
 using namespace std;
 
-class loss_function {
+class Loss_Function {
 protected:
     Matrice * inputs_derivatives;
 public:
-    loss_function();
-    ~loss_function();
+    Loss_Function();
+    ~Loss_Function();
 
     double loss_percentage(Matrice * input, vector<int> * target);
 
@@ -35,10 +35,10 @@ public:
         throw invalid_argument("Unimplemented");
     }
 
-    double regularization_loss(layer_dens * layer) const;
+    double regularization_loss(Layer_Dens * layer) const;
 };
 
-class categorical_cross_entropy : public loss_function {
+class categorical_cross_entropy : public Loss_Function {
 public:
     Vector * forward(Matrice * input, vector<int> * target);
 
@@ -49,7 +49,7 @@ public:
     void backward(Matrice * input, Matrice * target);
 };
 
-class binary_cross_entropy : public loss_function {
+class binary_cross_entropy : public Loss_Function {
 public:
     //Vector * forward(Matrice * input, vector<int> * target);
 
@@ -60,7 +60,7 @@ public:
     void backward(Matrice * input, Matrice * target);
 };
 
-class mean_squared_error : public loss_function {
+class mean_squared_error : public Loss_Function {
 public:
     //Vector * forward(Matrice * input, vector<int> * target);
 
