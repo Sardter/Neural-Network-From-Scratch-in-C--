@@ -25,12 +25,16 @@ public:
 };
 
 
-Matrice * generate_gaugian_weights(int columns, int row);
+Matrice * generate_gaugian_weights(int columns, int row, double rate = 0.1);
 
 Matrice * generate_binomial_weights(int columns, int row, double rate);
 
 Vector * default_biases(int neurons);
 
-double calculate_accuracy(Matrice * data, vector<int> * targets);
+double calculate_clasification_accuracy(Matrice * data, vector<int> * targets);
+
+double calculate_regression_accuracy(Matrice * data, Matrice * targets);
+
+double accuracy_percision(Matrice * data, double divisor = 1);
 
 #endif

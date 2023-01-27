@@ -44,15 +44,15 @@ Matrice * activaion_function::get_outputs() const
     return this->outputs;
 }
 
-void step_activation::forward(Matrice * inputs)
+void linear_activation::forward(Matrice * inputs)
 {
     this->inputs = inputs->copy();
-    this->outputs = this->apply_function(inputs , step_function);
+    this->outputs = inputs->copy();
 }
 
-void step_activation::backward(Matrice * derived_inputs) 
+void linear_activation::backward(Matrice * derived_inputs) 
 {
-   // this->derived_inputs = this->apply_function(inputs, step_function_derivative);
+   this->derived_inputs = derived_inputs->copy();
 }
 
 void sigmoid_activation::forward(Matrice * inputs) 
@@ -129,14 +129,6 @@ void soft_max_activation::backward(Matrice * derived_inputs)
         
         this->derived_inputs->data[i] = jacob->get_column(0)->data;
     }
-}
-
-double step_function(double x) {
-    return x > 0;
-}
-
-double step_function_derivative(double x) {
-    return 0;
 }
 
 double sigmoid_function(double x) {

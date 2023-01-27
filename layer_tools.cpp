@@ -44,7 +44,7 @@ void activation_softmax_loss_catogorical_crossentropy::backward(Matrice * inputs
     this->derived_inputs = this->derived_inputs->division(inputs->column_size());
 }
 
-Matrice * generate_gaugian_weights(int columns, int rows) {
+Matrice * generate_gaugian_weights(int columns, int rows, double rate) {
     Matrice * weights = new Matrice(columns, rows);
 
     default_random_engine generator(0);
@@ -54,7 +54,7 @@ Matrice * generate_gaugian_weights(int columns, int rows) {
     {
         for (size_t j = 0; j < rows; j++)
         {
-            weights->data[i][j] = 0.1 * dist(generator);
+            weights->data[i][j] = rate * dist(generator);
         }
     }
     return weights;
@@ -81,12 +81,34 @@ Vector * default_biases(int neurons) {
     return new Vector(neurons);
 }
 
-double calculate_accuracy(Matrice * data, vector<int> * targets) {
+double calculate_clasification_accuracy(Matrice * data, vector<int> * targets) {
     double sum = 0;
     for (size_t i = 0; i < data->column_size(); i++)
     {
-        sum += targets->at(i) == max_element(begin(data->data[i]), end(data->data[i])) - begin(data->data[i]);
+        sum += targets->at(i) == max_element(data->data[i].begin(), data->data[i].end()) - data->data[i].begin();
     }
     
     return sum / data->column_size();
+}
+
+double accuracy_percision(Matrice * data, double divisor) {
+    return standard_deviation(data) / divisor;
+}
+
+double calculate_regression_accuracy(Matrice * data, Matrice * targets) {
+    size_t col_size = data->column_size();
+    size_t row_size = data->row_size();
+
+    double sum = 0;
+    double percision = accuracy_percision(data, 250);
+    for (size_t i = 0; i < col_size; i++)
+    {
+        for (size_t j = 0; j < row_size; j++)
+        {
+            double acc = data->data[i][j] - targets->data[i][0];
+            sum += acc < percision && acc > -percision;
+        }
+    }
+    
+    return sum / (col_size * row_size);
 }

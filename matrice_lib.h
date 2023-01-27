@@ -101,4 +101,6 @@ Matrice * discrete_to_one_hot(vector<int> * nums, size_t limit);
 Matrice * diag_flat(vector<double> * nums);
 
 Matrice * jacobian_matrice(vector<double> * input);
+
+double standard_deviation(Matrice * m);
 #endif

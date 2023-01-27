@@ -101,7 +101,7 @@ Vector * binary_cross_entropy::forward(Matrice * input, Matrice * target) {
             sum += - (target->data[i][0] * log(clip(input->data[i][j]))) 
                 + (1 - target->data[i][0]) * (1 - log(clip(input->data[i][j])));
         }
-        res->data[i] = sum;
+        res->data[i] = sum / col_size;
     }
     
     return res;
@@ -125,4 +125,27 @@ void binary_cross_entropy::backward(Matrice * input, Matrice * target) {
     }
     
     this->inputs_derivatives = res;
+}
+
+Vector * mean_squared_error::forward(Matrice * input, Matrice * target) {
+    size_t col_size = input->column_size();
+    size_t row_size = input->row_size();
+
+    Vector * res = new Vector(col_size);
+
+    for (size_t i = 0; i < col_size; i++)
+    {
+        double sum = 0;
+        for (size_t j = 0; j < row_size; j++)
+        {
+            sum += (target->data[i][j] - input->data[i][j]) * (target->data[i][j] - input->data[i][j]);
+        }
+        res->data[i] = sum / col_size;
+    }
+    
+    return res;
+}
+
+void mean_squared_error::backward(Matrice * input, Matrice * target) {    
+    this->inputs_derivatives = input->subtract(target)->product(-2/input->row_size());
 }

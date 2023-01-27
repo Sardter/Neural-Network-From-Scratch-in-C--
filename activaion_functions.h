@@ -24,7 +24,7 @@ public:
 };
 
 
-class step_activation : public activaion_function 
+class linear_activation : public activaion_function 
 {
 public:
 
@@ -55,10 +55,6 @@ public:
     void forward(Matrice * inputs);
     void backward(Matrice * derived_inputs);
 };
-
-double step_function(double x);
-
-double step_function_derivative(double x);
 
 double sigmoid_function(double x);
 

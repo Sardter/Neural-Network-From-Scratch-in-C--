@@ -395,6 +395,8 @@ Vector * Matrice::rows_sum() const
     return res;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Matrice * discrete_to_one_hot(vector<int> * nums, size_t limit) {
     size_t row_num = nums->size();
     Matrice * res = new Matrice(limit, row_num);
@@ -420,6 +422,22 @@ Matrice * jacobian_matrice(vector<double> * input) {
     Matrice * m = new Matrice(*input);
 
     return diag_flat(input)->subtract(m->transpose()->dot_product(m));
+}
+
+double standard_deviation(Matrice * m) {
+    size_t row_size = m->row_size();
+    size_t col_size = m->column_size();
+
+    double mean = m->sum() / (row_size * col_size);
+    double variance = 0;
+    for (size_t i = 0; i < col_size; i++)
+    {
+        for (size_t j = 0; j < row_size; j++)
+        {
+            variance += pow(m->data[i][j] - mean, 2);
+        }
+    }
+    return sqrt(variance / (row_size * col_size));
 }
 
 ostream& operator << (ostream& stream, Matrice m) {

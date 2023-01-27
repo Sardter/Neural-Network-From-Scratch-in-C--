@@ -60,5 +60,16 @@ public:
     void backward(Matrice * input, Matrice * target);
 };
 
+class mean_squared_error : public loss_function {
+public:
+    //Vector * forward(Matrice * input, vector<int> * target);
+
+    Vector * forward(Matrice * input, Matrice * target);
+
+    //void backward(Matrice * input, vector<int> * target);
+
+    void backward(Matrice * input, Matrice * target);
+};
+
 
 #endif

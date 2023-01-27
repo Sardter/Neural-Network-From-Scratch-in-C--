@@ -116,7 +116,7 @@ int main() {
     //cout << categorical_cross_entropy(soft, inputs2_target()) << endl;
 
     cout << "accuracy: " << endl;
-    cout << calculate_accuracy(soft, inputs2_target()) << endl;
+    cout << calculate_clasification_accuracy(soft, inputs2_target()) << endl;
 
     return 0;
 }
