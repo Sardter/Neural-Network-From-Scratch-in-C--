@@ -55,6 +55,11 @@ void Linear_Activation::backward(Matrice * derived_inputs)
    this->derived_inputs = derived_inputs->copy();
 }
 
+Matrice * Linear_Activation::predictions(Matrice * outputs) const
+{
+    return outputs->copy();
+}
+
 void Sigmoid_Activation::forward(Matrice * inputs) 
 {
     this->inputs = inputs->copy();
@@ -66,13 +71,33 @@ void Sigmoid_Activation::backward(Matrice * derived_inputs)
     this->derived_inputs = derived_inputs->product(this->outputs->product(-1)->add(1)->product(this->outputs));
 }
 
-void ReLU_activation::forward(Matrice * inputs) 
+Matrice * Sigmoid_Activation::predictions(Matrice * outputs) const
+{
+    Matrice * res = outputs->copy();
+
+    size_t col_size = derived_inputs->column_size();
+    size_t row_size = derived_inputs->row_size();
+
+    for (size_t i = 0; i < col_size; i++)
+    {
+        for (size_t j = 0; j < row_size; j++)
+        {
+            if (res->data[i][j] < 0) 
+                res->data[i][j] = 0;
+        }
+        
+    }
+    
+    return res;
+}
+
+void ReLU_Activation::forward(Matrice * inputs) 
 {
     this->inputs = inputs->copy();
     this->outputs = this->apply_function(inputs , ReLU_function);
 }
 
-void ReLU_activation::backward(Matrice * derived_inputs) 
+void ReLU_Activation::backward(Matrice * derived_inputs) 
 {
     this->derived_inputs = derived_inputs->copy();
 
@@ -87,6 +112,11 @@ void ReLU_activation::backward(Matrice * derived_inputs)
                 this->derived_inputs->data[i][j] = 0;
         }
     }
+}
+
+Matrice * ReLU_Activation::predictions(Matrice * outputs) const
+{
+    return outputs->copy();
 }
 
 void Softmax_Activation::forward(Matrice * inputs)
@@ -129,6 +159,20 @@ void Softmax_Activation::backward(Matrice * derived_inputs)
         
         this->derived_inputs->data[i] = jacob->get_column(0)->data;
     }
+}
+
+Matrice * Softmax_Activation::predictions(Matrice * outputs) const
+{
+    size_t col_size = outputs->column_size();
+    size_t row_size = outputs->row_size();
+
+    Matrice * res = new Matrice(col_size, 1);
+    for (size_t i = 0; i < col_size; i++)
+    {
+        res->data[i][0] = max_element(outputs->data[i].begin(), outputs->data[i].end()) - outputs->data[i].begin();
+    }
+    
+    return res;
 }
 
 double sigmoid_function(double x) {

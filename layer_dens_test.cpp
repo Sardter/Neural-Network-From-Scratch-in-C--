@@ -54,9 +54,9 @@ vector<double> * biases() {
     return new vector<double>(biases);
 }
 
-vector<int> * inputs2_target() {
+Vector * inputs2_target() {
     double i0[] = {0, 0, 1};
-    return new vector<int>(begin(i0), end(i0));
+    return new Vector(i0, 3);
 }
 
 int main() {
@@ -97,7 +97,7 @@ int main() {
     cout << *l2.get_output() << endl;
     
     cout << "layer 2 out with activation:" << endl;
-    ReLU_activation relu;
+    ReLU_Activation relu;
     relu.forward(l2.get_output());
     cout << *relu.get_outputs() << endl;
 

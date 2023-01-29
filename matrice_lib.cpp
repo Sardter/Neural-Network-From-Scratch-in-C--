@@ -22,6 +22,11 @@ Vector::Vector(double data[], size_t size)
     this->data = vector<double>(data, data + size);
 }
 
+Vector::Vector(int data[], size_t size) 
+{
+    this->data = vector<double>(data, data + size);
+}
+
 Vector * Vector::copy() const
 {
     return new Vector(this->data);
@@ -397,12 +402,12 @@ Vector * Matrice::rows_sum() const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Matrice * discrete_to_one_hot(vector<int> * nums, size_t limit) {
+Matrice * discrete_to_one_hot(Vector * nums, size_t limit) {
     size_t row_num = nums->size();
     Matrice * res = new Matrice(limit, row_num);
     for (size_t i = 0; i < row_num; i++)
     {
-        res->data[nums->at(i)][i] = 1;
+        res->data[nums->data[i]][i] = 1;
     }
     return res->transpose();
 }

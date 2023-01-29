@@ -15,6 +15,8 @@ struct Vector {
 
     Vector(double data[], size_t size);
 
+    Vector(int data[], size_t size);
+
     Vector * copy() const;
 
     Vector * product(double scalar) const;
@@ -96,7 +98,7 @@ ostream& operator << (ostream& stream, vector<double> m);
 
 ostream& operator << (ostream& stream, Vector m);
 
-Matrice * discrete_to_one_hot(vector<int> * nums, size_t limit);
+Matrice * discrete_to_one_hot(Vector * nums, size_t limit);
 
 Matrice * diag_flat(vector<double> * nums);
 

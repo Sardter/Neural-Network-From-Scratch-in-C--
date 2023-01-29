@@ -47,7 +47,7 @@ int main()
     cout << "rows sum: " << *out->rows_sum() << endl;
 
     int i3[] = {1, 3, 3, 4};
-    vector<int> iv3(begin(i3), end(i3));
+    Vector iv3(begin(i3), end(i3));
     cout << *discrete_to_one_hot(&iv3, 6) << endl;
 
     cout << *diag_flat(&iv1) << endl;

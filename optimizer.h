@@ -15,7 +15,11 @@ public:
     Optimizer(double learning_rate);
     ~Optimizer();
 
-    void update_params(Layer_Dens * layer);
+    virtual void pre_update();
+    virtual void post_update();
+    virtual void update_params(Layer_Dens * layer);
+
+    virtual double get_learning_rate() const;
 };
 
 class Stochastic_Gradient_Descent: public Optimizer
@@ -32,9 +36,11 @@ public:
     Stochastic_Gradient_Descent(double learning_rate = 1, double decay = 0, double momentum = 0);
     ~Stochastic_Gradient_Descent();
 
-    void pre_update();
-    void post_update();
-    void update_params(Layer_Dens * layer);
+    void pre_update() override;
+    void post_update() override;
+    void update_params(Layer_Dens * layer) override;
+
+    double get_learning_rate() const override;
 };
 
 

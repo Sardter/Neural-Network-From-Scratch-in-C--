@@ -5,6 +5,7 @@
         "iostream": "cpp",
         "__locale": "cpp",
         "ios": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "algorithm": "cpp"
     }
 }

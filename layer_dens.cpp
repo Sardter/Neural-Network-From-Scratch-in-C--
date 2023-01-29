@@ -1,15 +1,17 @@
 #include "layer_dens.h"
 #include "matrice_lib.h"
 #include "layer_tools.h"
+#include "activaion_functions.h"
 #include <vector>
 
 using namespace std;
 
 Layer_Dens::Layer_Dens(
         int input_num, int neuron_num, 
+        Activaion_Function * function, 
         double WR_L1, double WR_L2, 
         double BR_L1, double BR_L2
-    ) : Layer()
+    ) : Layer(function)
 {
     this->weights = generate_gaugian_weights(input_num, neuron_num);
     this->biases = default_biases(neuron_num);
@@ -18,12 +20,16 @@ Layer_Dens::Layer_Dens(
 
     this->BR_L1 = BR_L1; this->BR_L2 = BR_L2;
     this->WR_L1 = WR_L1; this->WR_L2 = WR_L2;
+
+    this->inputs_derivative = nullptr;
+    this->weights_derivative = nullptr;
 }
 
 Layer_Dens::Layer_Dens(
         Matrice * weights, Vector * biases, 
+        Activaion_Function * function,
         double WR_L1, double WR_L2, 
-        double BR_L1, double BR_L2) : Layer()
+        double BR_L1, double BR_L2) : Layer(function)
 {
     this->weights = weights;
     this->biases = biases;
@@ -39,14 +45,26 @@ Layer_Dens::Layer_Dens(
 Layer_Dens::~Layer_Dens() {
     if (this->biases != nullptr) delete this->biases;
     if (this->biases_derivative != nullptr) delete this->biases_derivative;
+    if (this->weights != nullptr) delete this->weights;
+    if (this->inputs_derivative != nullptr) delete this->inputs_derivative;
+    if (this->weights_derivative != nullptr) delete this->weights_derivative;
 }
 
-void Layer_Dens::forward(Matrice * inputs) {
+void Layer_Dens::forward(Matrice * inputs, bool is_training) {
     this->output = inputs->dot_product(this->weights)->add(this->biases);
     this->inputs = inputs->copy();
+
+    if (this->activation_function != nullptr) {
+        this->activation_function->forward(this->output);
+    }
 }
 
 void Layer_Dens::backward(Matrice * derivated_inputs) {
+    if (this->activation_function != nullptr) {
+        this->activation_function->backward(derivated_inputs);
+        derivated_inputs = this->activation_function->get_derived_inputs();
+    }
+
     this->weights_derivative = this->inputs->transpose()->dot_product(derivated_inputs);
     this->biases_derivative = derivated_inputs->columns_sum();
 
@@ -80,7 +98,29 @@ void Layer_Dens::backward(Matrice * derivated_inputs) {
     }
 
     this->inputs_derivative = derivated_inputs->dot_product(this->weights->transpose());
-} 
+}
+
+double Layer_Dens::get_regularization_loss() const {
+    double loss = 0;
+
+    if (this->WR_L1 > 0) {
+        loss += this->WR_L1 * this->weights->abs()->sum();
+    }
+
+    if (this->WR_L2 > 0) {
+        loss += this->WR_L2 * this->weights->product(this->weights)->sum();
+    }
+
+    if (this->BR_L1 > 0) {
+        loss += this->BR_L1 * this->biases->abs()->sum();
+    }
+
+    if (this->BR_L2 > 0) {
+        loss += this->BR_L2 * this->biases->product(this->biases)->sum();
+    }
+
+    return loss;
+}
 
 
 Vector * Layer_Dens::get_biases_derivatives() const {
@@ -95,22 +135,19 @@ void Layer_Dens::set_biases(Vector * v) {
     this->biases = v;
 }
 
-double Layer_Dens::get_weight_regularizer_L1() const 
-{
-    return this->WR_L1;
+
+Matrice * Layer_Dens::get_weights() const {
+    return this->weights;
 }
 
-double Layer_Dens::get_weight_regularizer_L2() const 
-{
-    return this->WR_L2;
+Matrice * Layer_Dens::get_weight_derivatives() const {
+    return this->weights_derivative;
 }
 
-double Layer_Dens::get_bias_regularizer_L1() const 
-{
-    return this->BR_L1;
+void Layer_Dens::set_weights(Matrice * m) {
+    this->weights = m;
 }
 
-double Layer_Dens::get_bias_regularizer_L2() const 
-{
-    return this->BR_L2;
+bool Layer_Dens::is_trainable() const {
+    return true;
 }

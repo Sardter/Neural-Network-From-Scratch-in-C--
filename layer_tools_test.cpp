@@ -17,9 +17,9 @@ Matrice * soft_max_outputs() {
     return new Matrice(inputs);
 }
 
-vector<int> * targets() {
+Vector * targets() {
     int i[] = {0, 1, 1};
-    return new vector<int>(begin(i), end(i));
+    return new Vector(i, 3);
 }
 
 int main() {

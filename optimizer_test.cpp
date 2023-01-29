@@ -36,15 +36,12 @@ Matrice * inputs2() {
 
 int main() {
     Stochastic_Gradient_Descent optimizer(0.001, 0.1, 0.5);
-    Layer_Dens l1(4,5, 0.01, 0.01, 0.01, 0.01);
+    Layer_Dens l1(4,5, new ReLU_Activation(), 0.01, 0.01, 0.01, 0.01);
     l1.forward(inputs1());
-    ReLU_activation r1;
 
     for (size_t i = 1; i < 1000; i++)
     {
-        r1.forward(l1.get_output());
-        r1.backward(r1.get_outputs());
-        l1.backward(r1.get_derived_inputs());
+        l1.backward(l1.get_output());
 
         if (i % 10 == 0) {
             cout << *l1.get_weights() << endl;

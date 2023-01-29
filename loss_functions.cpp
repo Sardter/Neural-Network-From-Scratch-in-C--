@@ -1,8 +1,8 @@
 #include "matrice_lib.h"
 #include <cmath>
 #include "loss_functions.h"
-#include "layer_dens.h"
 #include <numeric>
+#include "layer_dens.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ Loss_Function::~Loss_Function() {
     if (this->inputs_derivatives != nullptr) delete this->inputs_derivatives;
 }
 
-double Loss_Function::loss_percentage(Matrice * input, vector<int> * target) {
+double Loss_Function::loss_percentage(Matrice * input, Vector * target) {
     Vector losses = *this->forward(input, target);
     return accumulate(losses.data.begin(), losses.data.end(), 0) / losses.size();
 }
@@ -24,28 +24,10 @@ double Loss_Function::loss_percentage(Matrice * input, Matrice * target) {
     return accumulate(losses.data.begin(), losses.data.end(), 0) / losses.size();
 }
 
-double Loss_Function::regularization_loss(Layer_Dens * layer) const
-{
-    double loss = 0;
-
-    if (layer->get_weight_regularizer_L1() > 0) {
-        loss += layer->get_weight_regularizer_L1() * layer->get_weights()->abs()->sum();
-    }
-
-    if (layer->get_weight_regularizer_L2() > 0) {
-        loss += layer->get_bias_regularizer_L2() * layer->get_weights()->product(layer->get_weights())->sum();
-    }
-
-    if (layer->get_bias_regularizer_L1() > 0) {
-        loss += layer->get_bias_regularizer_L1() * layer->get_biases()->abs()->sum();
-    }
-
-    if (layer->get_bias_regularizer_L2() > 0) {
-        loss += layer->get_bias_regularizer_L2() * layer->get_biases()->product(layer->get_biases())->sum();
-    }
-
-    return loss;
+Matrice * Loss_Function::get_input_derivatives() const {
+    return this->inputs_derivatives;
 }
+
 
 double clip(double x) {
     if (x < 1e-7) return 1e-7;
@@ -53,13 +35,13 @@ double clip(double x) {
     return x;
 }
 
-Vector * categorical_cross_entropy::forward(Matrice * input, vector<int> * target) {
+Vector * categorical_cross_entropy::forward(Matrice * input, Vector * target) {
     size_t col = input->column_size();
     
     Vector * res = new Vector(col);
     for (size_t i = 0; i < col; i++)
     {
-        res->data[i] = -log(clip(input->data[i][target->at(i)]));
+        res->data[i] = -log(clip(input->data[i][target->data[i]]));
     }
     return res;
 }
@@ -76,7 +58,7 @@ Vector * categorical_cross_entropy::forward(Matrice * input, Matrice * target) {
     return res;
 }
 
-void categorical_cross_entropy::backward(Matrice * input, vector<int> * target) {
+void categorical_cross_entropy::backward(Matrice * input, Vector * target) {
     this->backward(input, discrete_to_one_hot(target, input->row_size()));
 }
 

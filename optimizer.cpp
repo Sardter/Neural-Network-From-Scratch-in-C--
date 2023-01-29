@@ -14,6 +14,18 @@ Optimizer::~Optimizer() {
 
 }
 
+void Optimizer::pre_update() {
+
+}
+
+void Optimizer::post_update() {
+
+}
+
+double Optimizer::get_learning_rate() const {
+    return this->learning_rate;
+}
+
 void Optimizer::update_params(Layer_Dens * layer) {
     throw invalid_argument("Abstract Function Called");
 }
@@ -37,8 +49,6 @@ Stochastic_Gradient_Descent::~Stochastic_Gradient_Descent() {
 }
 
 void Stochastic_Gradient_Descent::update_params(Layer_Dens * layer) {
-    this->pre_update();
-
     Matrice * weights = layer->get_weights();
     Matrice * weights_der = layer->get_weight_derivatives();
 
@@ -73,7 +83,6 @@ void Stochastic_Gradient_Descent::update_params(Layer_Dens * layer) {
 
     layer->set_weights(weights->add(weights_update));
     layer->set_biases(biases->add(biases_update));
-    this->post_update();
 }
 
 void Stochastic_Gradient_Descent::pre_update() {
@@ -84,4 +93,8 @@ void Stochastic_Gradient_Descent::pre_update() {
 
 void Stochastic_Gradient_Descent::post_update() {
     this->iterations++;
+}
+
+double Stochastic_Gradient_Descent::get_learning_rate() const {
+    return this->current_learning_rate;
 }
